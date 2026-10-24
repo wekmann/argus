@@ -1,19 +1,25 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { StatusDashboard } from "@/components/StatusDashboard";
 import { authOptions } from "@/lib/auth";
 
-export const dynamic = "force-dynamic";
-
-export default async function HomePage() {
+async function AuthCheck() {
   const session = await getServerSession(authOptions);
   if (session) {
     redirect("/servers");
   }
+  return null;
+}
 
+export default function HomePage() {
   return (
     <main className="flex flex-1 flex-col">
+      <Suspense fallback={null}>
+        <AuthCheck />
+      </Suspense>
+
       <section className="mx-auto w-full max-w-3xl px-4 pb-6 pt-14 text-center sm:px-6 sm:pt-20">
         <p className="font-display text-xs font-semibold uppercase tracking-[0.22em] text-accent">
           Discord moderation

@@ -26,8 +26,6 @@ export const metadata: Metadata = {
     "Manage Argus across your Discord servers — moderation logs, Gemini AI builder, and more.",
 };
 
-export const dynamic = "force-dynamic";
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
