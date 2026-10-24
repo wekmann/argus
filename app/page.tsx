@@ -2,8 +2,10 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import { LoginButton } from "@/components/LoginButton";
 import { StatusDashboard } from "@/components/StatusDashboard";
 import { authOptions } from "@/lib/auth";
+import { authErrorMessage } from "@/lib/authErrors";
 
 async function AuthCheck() {
   const session = await getServerSession(authOptions);
@@ -13,7 +15,12 @@ async function AuthCheck() {
   return null;
 }
 
-export default function HomePage() {
+export default async function HomePage({ searchParams }: PageProps<"/">) {
+  const { error } = await searchParams;
+  const errorMessage = authErrorMessage(
+    Array.isArray(error) ? error[0] : error,
+  );
+
   return (
     <main className="flex flex-1 flex-col">
       <Suspense fallback={null}>
@@ -33,12 +40,15 @@ export default function HomePage() {
         </p>
 
         <div className="mt-8 flex flex-col items-center gap-3">
-          <Link
-            href="/api/auth/signin/discord?callbackUrl=/servers"
-            className="inline-flex h-12 items-center justify-center rounded-lg bg-accent px-8 text-sm font-semibold text-bg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-          >
-            Login with Discord
-          </Link>
+          {errorMessage && (
+            <p
+              role="alert"
+              className="max-w-sm rounded-xl border border-danger/50 bg-danger/10 px-4 py-3 text-sm text-ink"
+            >
+              {errorMessage}
+            </p>
+          )}
+          <LoginButton />
           <p className="max-w-sm text-xs leading-relaxed text-muted">
             By continuing you agree to the{" "}
             <Link href="/terms" className="text-accent hover:underline">
