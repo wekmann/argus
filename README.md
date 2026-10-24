@@ -34,3 +34,5 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run dev` | Development server |
 | `npm run build` | Production build |
 | `npm start` | Run production build |
+
+LEMEK
